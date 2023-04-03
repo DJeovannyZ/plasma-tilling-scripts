@@ -6,18 +6,12 @@ current_desktop=$(xdotool get_desktop)
 function getWindows {
     echo ""
     echo "Obteniendo ventanas escritorio: $1"
-    window_ids=()
-    monitor1=()
+    window_ids=() monitor1=()
     monitor2=()
-    posicion1X=()
-    posicion1Y=()
-    posicion2X=()
-    posicion2Y=()
     classes=(brave-browser alacritty Dolphin Java systemsettings Discord)
     for class in "${classes[@]}"; do
         ids=$(xdotool search --onlyvisible --desktop $1 --class "$class")
         window_ids+=($ids)
-        echo "$ids"
     done
     if [ ! ${#window_ids[@]} -eq 0 ]; then
         for id in "${window_ids[@]}"; do
@@ -29,12 +23,10 @@ function getWindows {
                 posicion1X+=("$posicion_x")
                 posicion1Y+=("$posicion_y")
                 name=$(xdotool getwindowname $id)
-                echo "M1 - $name $id $posicion_x $posicion_y"
             else
                 monitor2+=("$id")
                 posicion2X+=("$posicion_x")
                 posicion2Y+=("$posicion_y")
-                echo "M2 - $name $id $posicion_x $posicion_y"
             fi
         done
     else
@@ -42,22 +34,38 @@ function getWindows {
     fi
 
 }
-function mv1 {
-    for ((i=0; i<${#monitor1[@]}; i++)) do
-        xdotool set_desktop_for_window "${monitor1[$i]}" $1
-        # xdotool windowmove "${monitor1[$i]}" "${posicion1X[$i]}" "${posicion1Y[$i]}"
-        echo "moviendo: M1"
-        xdotool getwindowname "${monitor1[$i]}"
-        echo " a escritorio $1"
+
+function mv1Current {
+    for ((i=0; i<${#current_monitor1[@]}; i++)) do
+        xdotool set_desktop_for_window "${current_monitor1[$i]}" $1
+        # xdotool windowmove "${current_monitor1[$i]}" "${posicion1X[$i]}" "${posicion1Y[$i]}"
+        name=$(xdotool getwindowname "${current_monitor1[$i]}")
+        echo "moviendo: $name a escritorio $1"
     done
 }
-function mv2 {
-    for ((i=0; i<${#monitor2[@]}; i++)) do
-        xdotool set_desktop_for_window "${monitor2[$i]}" $1
-        # xdotool windowmove "${monitor2[$i]}" "${posicion2X[$i]}" "${posicion2Y[$i]}"
-        echo "moviendo: M2"
-        xdotool getwindowname "${monitor2[$i]}"
-        echo " a escritorio $1"
+function mv2Current {
+    for ((i=0; i<${#current_monitor2[@]}; i++)) do
+        xdotool set_desktop_for_window "${current_monitor2[$i]}" $1
+        # xdotool windowmove "${current_monitor2[$i]}" "${posicion2X[$i]}" "${posicion2Y[$i]}"
+        name=$(xdotool getwindowname "${current_monitor2[$i]}")
+        echo "moviendo: $name a escritorio $1"
+    done
+}
+
+function mv1New {
+    for ((i=0; i<${#new_monitor1[@]}; i++)) do
+        xdotool set_desktop_for_window "${new_monitor1[$i]}" $1
+        # xdotool windowmove "${new_monitor1[$i]}" "${posicion1X[$i]}" "${posicion1Y[$i]}"
+        name=$(xdotool getwindowname "${new_monitor1[$i]}")
+        echo "moviendo: $name a escritorio $1"
+    done
+}
+function mv2New {
+    for ((i=0; i<${#new_monitor2[@]}; i++)) do
+        name=$(xdotool getwindowname "${new_monitor2[$i]}")
+        xdotool set_desktop_for_window "${new_monitor2[$i]}" $1
+        # xdotool windowmove "${new_monitor2[$i]}" "${posicion2X[$i]}" "${posicion2Y[$i]}"
+        echo "moviendo: $name a escritorio $1"
     done
 }
 
@@ -65,27 +73,51 @@ function mainChange () {
     desktop=$1
     mouse_location=$(xdotool getmouselocation)
     mouse_x=$(echo $mouse_location | cut -d ' ' -f 1 | cut -d ':' -f 2)
-    echo "mouse $mouse_x"
-
     if [ "$current_desktop" -ne $desktop ]; then
         getWindows "$current_desktop"
+        current_monitor1=("${monitor1[@]}")
+        current_monitor2=("${monitor2[@]}")
+        getWindows $desktop
+        new_monitor1=("${monitor1[@]}")
+        new_monitor2=("${monitor2[@]}")
         if (( $mouse_x < 1920 )); then
-                mv2 9
-            getWindows $desktop
-                mv2 "$current_desktop"
-            getWindows 9
-                mv2 $desktop
+            if [ ! ${#current_monitor2[@]} -eq 0 ] && [ ! ${#new_monitor2[@]} -eq 0 ]; then
+                mv2New 9
+                mv2Current $desktop
+                xdotool set_desktop $desktop
+                getWindows 9
+                new_monitor1=("${monitor1[@]}")
+                new_monitor2=("${monitor2[@]}")
+                mv2New $current_desktop
+            elif [ ! ${#current_monitor2[@]} -eq 0 ] && [ ${#new_monitor2[@]} -eq 0 ]; then
+                mv2Current $desktop
+                xdotool set_desktop $desktop
+            elif [ ${#current_monitor2[@]} -eq 0 ] && [ ! ${#new_monitor2[@]} -eq 0 ]; then
+                mv2New $current_desktop
+                xdotool set_desktop $desktop
+            elif [ ${#current_monitor2[@]} -eq 0 ] && [ ${#new_monitor2[@]} -eq 0 ]; then
+                xdotool set_desktop $desktop
+            fi
         else
-                mv1 9
-            getWindows $desktop
-                mv1 "$current_desktop"
-            getWindows 9
-                mv1 $desktop
+            if [ ! ${#current_monitor1[@]} -eq 0 ] && [ ! ${#new_monitor1[@]} -eq 0 ]; then
+                mv1New 9
+                mv1Current $desktop
+                xdotool set_desktop $desktop
+                getWindows 9
+                new_monitor1=("${monitor1[@]}")
+                new_monitor2=("${monitor2[@]}")
+                mv1New $current_desktop
+            elif [ ! ${#current_monitor1[@]} -eq 0 ] && [ ${#new_monitor1[@]} -eq 0 ]; then
+                mv1Current $desktop
+                xdotool set_desktop $desktop
+            elif [ ${#current_monitor1[@]} -eq 0 ] && [ ! ${#new_monitor1[@]} -eq 0 ]; then
+                mv1New $current_desktop
+                xdotool set_desktop $desktop
+            elif [ ${#current_monitor1[@]} -eq 0 ] && [ ${#new_monitor1[@]} -eq 0 ]; then
+                xdotool set_desktop $desktop
+            fi
         fi
-        xdotool set_desktop $desktop
-    else
-        echo "current_desktop es igual a cero"
+    else        echo "current_desktop es igual a cero"
     fi
 }
 
-main "$@"
