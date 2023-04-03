@@ -11,8 +11,7 @@ for class in "${classes[@]}"; do
     window_ids+=($ids)
 done
 
-# Separar los IDs de ventanas en dos arreglos según su posición en pantalla
-monitor1=()
+# Separar los IDs de ventanas en dos arreglos según su posición en pantalla monitor1=()
 posicion1X=()
 posicion1Y=()
 monitor1=()
@@ -20,6 +19,7 @@ posicion2X=()
 posicion2Y=()
 
 for id in "${window_ids[@]}"; do
+    echo "id: $id"
 
     geometry=$(xdotool getwindowgeometry "$id")
     posicion_x=$(echo "$geometry" | awk '/Position:/ {print $2}' | awk -F'[x,]' '{print $1}')
