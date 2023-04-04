@@ -1,4 +1,4 @@
-lang=en
+{: lang="en"}
 # Shortcuts for KDE Plasma Tiling Manager
 
 This repository contains scripts for creating keyboard shortcuts for KDE Plasma in an attempt to have a kind of tiling manager on 2 screens in KDE Plasma, with the monitors set up in extended screen mode.
@@ -27,8 +27,7 @@ This folder contains scripts to handle each virtual desktop so that they are ind
 
 This is a simple solution for those who want to use dual monitors with KDE Plasma and enjoy a tiling manager experience. Feel free to modify and improve the scripts according to your needs.
 
-lang=es
-
+{: lang="en"}
 # Shortcuts para KDE Plasma Tiling Manager
 
 Este repositorio contiene scripts para crear atajos de teclado para KDE Plasma con el objetivo de tener una especie de gestor de ventanas en mosaico en 2 pantallas en KDE Plasma, con los monitores configurados en modo de pantalla extendida.
