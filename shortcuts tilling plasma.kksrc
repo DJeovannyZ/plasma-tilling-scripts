@@ -1,0 +1,41 @@
+[changeWindowsPlasma.sh.desktop][Global Shortcuts]
+_launch=Meta+Z
+
+[desktop1.sh-3.desktop][Global Shortcuts]
+_launch=Meta+1
+
+[desktop2.sh-2.desktop][Global Shortcuts]
+_launch=Meta+2
+
+[desktop3.sh-2.desktop][Global Shortcuts]
+_launch=Meta+3
+
+[desktop4.sh-2.desktop][Global Shortcuts]
+_launch=Meta+4
+
+[desktop5.sh-2.desktop][Global Shortcuts]
+_launch=Meta+5
+
+[desktop6.sh-2.desktop][Global Shortcuts]
+_launch=Meta+6
+
+[desktop7.sh-2.desktop][Global Shortcuts]
+_launch=Meta+7
+
+[desktop8.sh-2.desktop][Global Shortcuts]
+_launch=Meta+8
+
+[desktop9.sh-2.desktop][Global Shortcuts]
+_launch=Meta+9
+
+[moveMouse.sh-2.desktop][Global Shortcuts]
+_launch=Meta+X
+
+[rofi-2.desktop][Global Shortcuts]
+_launch=Meta+M
+
+[setxkbmap-2.desktop][Global Shortcuts]
+_launch=Meta+O
+
+[setxkbmap.desktop][Global Shortcuts]
+_launch=Meta+I
