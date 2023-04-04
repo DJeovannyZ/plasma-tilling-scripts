@@ -1,11 +1,7 @@
 #!/bin/bash
 current_desktop=$(xdotool get_desktop)
-# Definir las clases de ventanas a buscar classes=("brave-browser" "alacritty" "Dolphin" "Java" "systemsettings" "Discord")
 
-# Obtener los IDs de todas las ventanas con esas clases y almacenarlos en los arrays globales
 function getWindows {
-    echo ""
-    echo "Obteniendo ventanas escritorio: $1"
     window_ids=() monitor1=()
     monitor2=()
     classes=(brave-browser alacritty Dolphin Java systemsettings Discord)
@@ -29,8 +25,6 @@ function getWindows {
                 posicion2Y+=("$posicion_y")
             fi
         done
-    else
-        echo "no hay ventanas en $1"
     fi
 
 }
@@ -39,16 +33,12 @@ function mv1Current {
     for ((i=0; i<${#current_monitor1[@]}; i++)) do
         xdotool set_desktop_for_window "${current_monitor1[$i]}" $1
         # xdotool windowmove "${current_monitor1[$i]}" "${posicion1X[$i]}" "${posicion1Y[$i]}"
-        name=$(xdotool getwindowname "${current_monitor1[$i]}")
-        echo "moviendo: $name a escritorio $1"
     done
 }
 function mv2Current {
     for ((i=0; i<${#current_monitor2[@]}; i++)) do
         xdotool set_desktop_for_window "${current_monitor2[$i]}" $1
         # xdotool windowmove "${current_monitor2[$i]}" "${posicion2X[$i]}" "${posicion2Y[$i]}"
-        name=$(xdotool getwindowname "${current_monitor2[$i]}")
-        echo "moviendo: $name a escritorio $1"
     done
 }
 
@@ -56,16 +46,12 @@ function mv1New {
     for ((i=0; i<${#new_monitor1[@]}; i++)) do
         xdotool set_desktop_for_window "${new_monitor1[$i]}" $1
         # xdotool windowmove "${new_monitor1[$i]}" "${posicion1X[$i]}" "${posicion1Y[$i]}"
-        name=$(xdotool getwindowname "${new_monitor1[$i]}")
-        echo "moviendo: $name a escritorio $1"
     done
 }
 function mv2New {
     for ((i=0; i<${#new_monitor2[@]}; i++)) do
         name=$(xdotool getwindowname "${new_monitor2[$i]}")
         xdotool set_desktop_for_window "${new_monitor2[$i]}" $1
-        # xdotool windowmove "${new_monitor2[$i]}" "${posicion2X[$i]}" "${posicion2Y[$i]}"
-        echo "moviendo: $name a escritorio $1"
     done
 }
 
@@ -117,7 +103,6 @@ function mainChange () {
                 xdotool set_desktop $desktop
             fi
         fi
-    else        echo "current_desktop es igual a cero"
     fi
 }
 
